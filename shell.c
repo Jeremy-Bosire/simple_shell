@@ -8,12 +8,13 @@ int main(void)
 {
 	pid_t q;
 	size_t n = 10;
+	char *buf;
 	char *argVec[] = {NULL};
 
 	printf("#cisfun$ ");
-	while (getline(&argVec[0], &n, stdin) != EOF)
+	while (getline(&buf, &n, stdin) != EOF)
 	{
-		argVec[0][strcspn(argVec[0], "\n")] = '\0';
+		buf[strcspn(buf, "\n")] = '\0';
 		q = fork();
 		if (q == -1)
 		{
@@ -22,7 +23,7 @@ int main(void)
 		}
 		else if (q == 0)
 		{
-			if (execvp(argVec[0], argVec) == -1)
+			if (execvp(buf, argVec) == -1)
 			{
 				perror("./shell");
 				exit(EXIT_FAILURE);
@@ -34,6 +35,6 @@ int main(void)
 			printf("#cisfun$ ");
 		}
 	}
-	free(argVec[0]);
+	free(buf);
 	return (0);
 }
